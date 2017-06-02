@@ -3,12 +3,12 @@ import path from 'path';
 
 export default {
   debug: true,
-  devtool: 'eval-source-map', // 'inline-source-map',
+  devtool: 'cheap-eval-source-map', // 'inline-source-map',
   noInfo: false,
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
     'webpack-hot-middleware/client?reload=true', //note that it reloads the page if hot module reloading fails.
-    path.resolve(__dirname, 'client/index')
+    path.resolve(__dirname, 'client', 'index')
   ],
   target: 'web',
   output: {
