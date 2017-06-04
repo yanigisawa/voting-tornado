@@ -1,21 +1,34 @@
-import React, {PropTypes} from 'react';
-import PurpleAppBar from './components/toolbar/PurpleAppBar.js';      // AppBar with simple overrides
-import { Button } from 'react-toolbox/lib/button'; // Bundled component import
+import React from 'react';
+import {PropTypes} from 'prop-types';
+import Header from './components/toolbar/Header';
 import {connect} from 'react-redux';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {routes} from './routes';
 
 class App extends React.Component {
   render () {
     return (
       <div>
-          <PurpleAppBar />
-          {this.props.children}
-        </div>
+        <Router>
+          <div>
+            <Header loading={this.props.loading} /> 
+            
+            {routes.map((route, index) => (
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                component={route.main}
+              />
+            ))}
+          </div>
+        </Router>
+      </div>
     );
   }
 }
 
 App.propTypes = {
-  children: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired
 };
 

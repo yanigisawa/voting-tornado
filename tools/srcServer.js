@@ -10,6 +10,17 @@ const port = 3000;
 const app = express();
 const compiler = webpack(config);
 
+require('babel-core/register')({
+  presets: ['es2015', 'react']
+});
+
+require.extensions['.scss'] = () => {
+  return;
+};
+require.extensions['.css'] = () => {
+  return;
+};
+
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,
   publicPath: config.output.publicPath
