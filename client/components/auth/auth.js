@@ -1,11 +1,12 @@
 import { EventEmitter } from 'events';
-// import history from '../history';
+import createHistory from 'history/createBrowserHistory';
 import auth0 from 'auth0-js';
 import {AUTH_CONFIG} from './auth0.config';
 
 class Auth extends EventEmitter {
-    constructor() {
+  constructor() {
     super();
+    this.history = createHistory();
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
@@ -28,12 +29,13 @@ class Auth extends EventEmitter {
 
   handleAuthentication() {
     this.auth0.parseHash((err, authResult) => {
+      debugger;
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
-        // history.replace('/home');
+        this.history.replace('/');
       } else if (err) {
-        // history.replace('/home');
-        // console.log(err);
+        this.history.replace('/home');
+        console.log(err);
       }
     });
   }
@@ -46,7 +48,7 @@ class Auth extends EventEmitter {
       localStorage.setItem('id_token', authResult.idToken);
       localStorage.setItem('expires_at', expiresAt);
       // navigate to the home route
-      // history.replace('/home');
+      this.history.replace('/home');
     }
   }
 
@@ -56,7 +58,7 @@ class Auth extends EventEmitter {
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
     // navigate to the home route
-    // history.replace('/home');
+    this.history.replace('/home');
   }
 
   isAuthenticated() {

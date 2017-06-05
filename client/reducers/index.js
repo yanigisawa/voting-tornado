@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
-// import courses from './courseReducer';
+import events from './eventReducer';
 // import authors from './authorReducer';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 
 const rootReducer = combineReducers({
-  // courses, // short-hand property name ES6
+  events, // short-hand property name ES6
   // authors,
   ajaxCallsInProgress
 });

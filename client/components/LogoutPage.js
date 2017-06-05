@@ -1,5 +1,6 @@
 import React from 'react';
 import Auth from './auth/auth';
+import {Redirect} from 'react-router';
 
 class LogoutPage extends React.Component {
 	render() {
@@ -9,6 +10,7 @@ class LogoutPage extends React.Component {
 		return (
 			<div>
 				<h2>You have been logged out.</h2>
+				<Redirect to="/" />
 			</div>
 		);
 	}

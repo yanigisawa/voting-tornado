@@ -1,7 +1,7 @@
 import App from './App';
 import HomePage from './components/HomePage';
 import AboutPage from './components/AboutPage';
-import EventsPage from './components/EventsPage';
+import EventsPage from './components/events/EventsPage';
 import Auth0CallbackPage from './components/Auth0CallbackPage';
 import LogoutPage from './components/LogoutPage';
 
