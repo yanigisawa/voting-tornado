@@ -17,7 +17,10 @@ require('babel-core/register')({
 require.extensions['.scss'] = () => {
   return;
 };
-require.extensions['.css'] = () => {
+// require.extensions['.css'] = () => {
+//   return;
+// };
+require.extensions['.svg'] = () => {
   return;
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import Auth from './auth/auth';
-import {Redirect} from 'react-router';
+import {Redirect} from 'react-router-dom';
 
 class LogoutPage extends React.Component {
 	render() {

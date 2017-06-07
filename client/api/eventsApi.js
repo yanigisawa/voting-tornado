@@ -1,17 +1,18 @@
 import Auth from '../components/auth/auth';
-
+import jquery from 'jquery';
 
 // TODO: Make API Configurable
+const baseUrl = "http://localhost:3500/api";
 
 class EventsApi {
 
   static getAllEvents() {
     let auth = new Auth();
     
-    return $.ajax({
+    return jquery.ajax({
       headers : {},
       dataType : "json",
-      url : 'http://localhost:3500/api/getAllEvents'
+      url : baseUrl + '/getAllEvents'
     });
   }
 }

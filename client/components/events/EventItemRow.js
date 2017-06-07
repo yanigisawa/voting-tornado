@@ -1,6 +1,6 @@
 import React from 'react';
 import {PropTypes} from 'prop-types';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 
 const EventItemRow = ({event}) => {
   return (
@@ -13,7 +13,7 @@ const EventItemRow = ({event}) => {
 };
 
 EventItemRow.propTypes = {
-  event: PropTypes.object.isRequired
+  event: PropTypes.object.isRequired,
 };
 
 export default EventItemRow;

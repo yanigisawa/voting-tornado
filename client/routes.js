@@ -2,6 +2,7 @@ import App from './App';
 import HomePage from './components/HomePage';
 import AboutPage from './components/AboutPage';
 import EventsPage from './components/events/EventsPage';
+import ManageEventPage from './components/events/ManageEventPage';
 import Auth0CallbackPage from './components/Auth0CallbackPage';
 import LogoutPage from './components/LogoutPage';
 
@@ -15,6 +16,13 @@ export const routes = [
   },
   { path: '/events',
     main: EventsPage
+  },
+  {
+    path: '/event',
+    main: ManageEventPage
+  },
+  { path: '/events/:id',
+    main: ManageEventPage
   },
   {
     path: '/auth0-callback',

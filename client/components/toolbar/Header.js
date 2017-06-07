@@ -12,16 +12,19 @@ function login() {
 
 const Header = ({ loading }) => {
   return (
-    <nav>
-      <Link to="/" >Home</Link>
-      {" | "}
-      <Link to="/events" >Events</Link>
-      {" | "}
-      <Link to="/about" >About</Link>
-      {" | "}
-      {auth.isAuthenticated() && <Link to="/logout" >Logout</Link>}
-      {!auth.isAuthenticated() && <Link to="/" onClick={login}>Login</Link>}
-    </nav>
+    <div>
+      <h1>Voting Tornado</h1>
+      <nav>
+        <Link to="/" >Home</Link>
+        {" | "}
+        <Link to="/events" >Events</Link>
+        {" | "}
+        <Link to="/about" >About</Link>
+        {" | "}
+        {auth.isAuthenticated() && <Link to="/logout" >Logout</Link>}
+        {!auth.isAuthenticated() && <Link to="/" onClick={login}>Login</Link>}
+      </nav>
+    </div>
   );
 };
 

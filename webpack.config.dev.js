@@ -46,8 +46,8 @@ export default {
       {test: /\.js$/, include: path.join(__dirname, 'client'), loaders: ['babel']},
       {test: /\.css$/, loaders: [
         'style-loader', 
-        // 'css-loader',        
-        "css-loader?modules&importLoaders=1&sourceMap=1&localIdentName=[name]--[local]--[hash:base64:8]",
+        'css-loader',        
+        // "css-loader?modules&importLoaders=1&sourceMap=1&localIdentName=[name]--[local]--[hash:base64:8]",
         'postcss-loader'
       ]},
       {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file'},

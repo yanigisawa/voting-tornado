@@ -17,8 +17,7 @@
     "react-css-themr": "^2.1.2",
     "react-dom": "^15.5.4",
     "react-redux": "5.0.5",
-    "react-router-dom": "4.1.1 ",
-    "react-router-redux": "4.0.8 ",
+    "react-router-dom": "^4.1.1",
     "redux": "3.5.2",
     "redux-thunk": "2.0.1",
     "toastr": "2.1.2"
@@ -71,12 +70,13 @@
   },
   "scripts": {
     "prestart": "babel-node tools/startMessage.js",
-    "start": "npm-run-all --parallel open:src lint:watch test:watch",
+    "start": "npm-run-all --parallel open:src lint:watch test:watch server:start",
     "open:src": "babel-node tools/srcServer.js",
     "lint": "node_modules/.bin/esw webpack.config.* client tools",
     "lint:watch": "npm run lint -- --watch",
     "test": "mocha --reporter progress tools/testSetup.js \"client/**/*.test.js\"",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "server:start": "python server/main.py"
   },
   "keywords": [],
   "author": "",

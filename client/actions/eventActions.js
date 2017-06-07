@@ -2,8 +2,8 @@ import * as types from './actionTypes.js';
 import eventsApi from '../api/eventsApi';
 import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
 
-export function loadEventsSucess(courses) {
-  return {type: types.LOAD_EVENTS_SUCCESS, courses};
+export function loadEventsSuccess(events) {
+  return {type: types.LOAD_EVENTS_SUCCESS, events};
 }
 
 // export function updateCourseSuccess(course) {
@@ -14,12 +14,12 @@ export function loadEventsSucess(courses) {
 //   return {type: types.CREATE_COURSE_SUCCESS, course};
 // }
 
-export function loadCourses() {
+export function loadEvents() {
   return function(dispatch) {
     dispatch(beginAjaxCall());
-    return eventsApi.getAllEvents().then(events => {
-      dispatch(loadEventsSucess(events));
-    }).catch(error => {
+    return eventsApi.getAllEvents().done(response => {
+      dispatch(loadEventsSuccess(response.events));
+    }).fail(error => {
       dispatch(ajaxCallError());
       throw(error);
     });
