@@ -15,13 +15,15 @@ export const routes = [
     main: AboutPage
   },
   { path: '/events',
+    exact: true,
     main: EventsPage
   },
   {
     path: '/event',
+    exact: true,
     main: ManageEventPage
   },
-  { path: '/events/:id',
+  { path: '/event/:id',
     main: ManageEventPage
   },
   {

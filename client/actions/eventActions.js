@@ -6,13 +6,13 @@ export function loadEventsSuccess(events) {
   return {type: types.LOAD_EVENTS_SUCCESS, events};
 }
 
-// export function updateCourseSuccess(course) {
-//   return {type: types.UPDATE_COURSE_SUCCESS, course};
-// }
+export function updateEventSuccess(event) {
+  return {type: types.UPDATE_EVENT_SUCCESS, event};
+}
 
-// export function createCourseSuccess(course) {
-//   return {type: types.CREATE_COURSE_SUCCESS, course};
-// }
+export function createEventSuccess(event) {
+  return {type: types.CREATE_EVENT_SUCCESS, event};
+}
 
 export function loadEvents() {
   return function(dispatch) {
@@ -26,15 +26,23 @@ export function loadEvents() {
   };
 }
 
-// export function saveCourse(course) {
-//   return function(dispatch, getState) {
-//     dispatch(beginAjaxCall());
-//     return courseApi.saveCourse(course).then(savedCourse => {
-//       course.id ? dispatch(updateCourseSuccess(savedCourse)) :
-//         dispatch(createCourseSuccess(savedCourse));
-//     }).catch(error => {
-//       dispatch(ajaxCallError());
-//       throw(error);
-//     });
-//   };
-// }
+export function saveEvent(event) {
+  return function(dispatch, getState) {
+    dispatch(beginAjaxCall());
+
+    let apiMethod = event.id ? eventsApi.updateEvent : eventsApi.createEvent;
+    return apiMethod(event).then(response => {
+      console.log("saved Event: " + response.success);
+      if (event.id) {
+         dispatch(updateEventSuccess(response.event));
+      } else {
+        dispatch(createEventSuccess(response.event));
+      }
+    }, (xr, status, error) => {
+      dispatch(ajaxCallError());
+      console.log("failed method called: " + error);
+      // debugger;
+      // throw(error);
+    });
+  };
+}

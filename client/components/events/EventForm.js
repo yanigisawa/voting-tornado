@@ -1,8 +1,9 @@
 import React from 'react';
 import {PropTypes} from 'prop-types';
 import TextInput from '../common/TextInput';
+import CategoryItemList from './CategoryItemList';
 
-const EventForm = ({event, allCategories, onSave, onChange, loading, errors, saving}) => {
+const EventForm = ({event, allCategories, onSave, onChange, onNewCategory, loading, errors, saving}) => {
   return (
     <form>
       <TextInput
@@ -12,12 +13,10 @@ const EventForm = ({event, allCategories, onSave, onChange, loading, errors, sav
         onChange={onChange}
         error={errors.title} />
 
-      <TextInput
-        name="category"
-        label="Category"
-        value={event.category}
+      <CategoryItemList
+        categories={event.categories}
         onChange={onChange}
-        error={errors.category} />
+        onNewCategory={onNewCategory} />
 
       <TextInput
         name="startDate"
@@ -45,6 +44,7 @@ EventForm.propTypes = {
   allCategories: PropTypes.array, 
   onSave: PropTypes.func.isRequired, 
   onChange: PropTypes.func.isRequired,
+  onNewCategory: PropTypes.func.isRequired,
   loading : PropTypes.bool,
   errors: PropTypes.object,
   saving: PropTypes.bool
