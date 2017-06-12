@@ -11,7 +11,7 @@ class ManageEventPage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      event: Object.assign({}, props.event),
+      event: JSON.parse(JSON.stringify(props.event)),
       errors: {},
       saving: false,
       redirectToEvents: false
@@ -21,6 +21,15 @@ class ManageEventPage extends React.Component {
     this.saveEvent = this.saveEvent.bind(this);
     this.redirect = this.redirect.bind(this);
     this.addNewCategory = this.addNewCategory.bind(this);
+    this.removeCategory = this.removeCategory.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.event.id !== nextProps.event.id) {
+      // Use JSON.parse and JSON.stringify for Deep Object Copy
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+      this.setState({event: JSON.parse(JSON.stringify(nextProps.event))});
+    }
   }
 
   getCategoryFieldFromField(field, categoryId) {
@@ -29,23 +38,30 @@ class ManageEventPage extends React.Component {
   }
 
   getCategoryIdFromField(field) {
-    let categoryId = field.replace('categoryName', '').replace('categoryWeight', '');
+    let categoryId = field.replace('categoryName', '').replace('categoryWeight', '').replace('categoryRemove', '');
     return parseInt(categoryId);
   }
 
   updateEvent(e) {
     let field = e.target.name;
-    let event = this.state.event;
-    if (field.includes("category")) {
-      let categoryId = this.getCategoryIdFromField(field);
-      let categoryItem = event.categories.filter(c => c.id == categoryId)[0];
-      field = this.getCategoryFieldFromField(field, categoryId);
-      categoryItem[field] = e.target.value;
-    } else {
-      event[field] = e.target.value;
-    }
+    let value = e.target.value;
+    // Functional setState: https://medium.freecodecamp.com/functional-setstate-is-the-future-of-react-374f30401b6b
+    let updateField = function(prevState) {
+      let event = prevState.event;
+      if (field.includes("category")) {
+        let categoryId = this.getCategoryIdFromField(field);
+        let categoryItem = event.categories.filter(c => c.id === categoryId)[0];
+        let catIndex = event.categories.indexOf(categoryItem);
+        field = this.getCategoryFieldFromField(field, categoryId);
+        event.categories[catIndex][field] = value;
+      } else {
+        event[field] = value;
+      }
+      // debugger;
+      return event;
+    };
 
-    return this.setState({event: event});
+    return this.setState(updateField);
   }
 
   redirect() {
@@ -67,13 +83,30 @@ class ManageEventPage extends React.Component {
 
   addNewCategory(e) {
     this.setState((prevState) => {
-      let nextCategoryId = prevState.event.categories.length;
+      const categoryCount = prevState.event.categories.length;
+      let nextCategoryId = 0;
+      if (categoryCount > 0) {
+        nextCategoryId = prevState.event.categories[categoryCount - 1].id + 1;
+      }
+
       prevState.event.categories.push({id: nextCategoryId, name: '', weight: 0.0});
+      return prevState.event;
     });
   }
 
+  removeCategory(e) {
+    let field = e.target.name;
+    let event = this.state.event;
+
+    if (!field.includes("category")) { return; }
+
+    let categoryId = this.getCategoryIdFromField(field);
+    event.categories = event.categories.filter(c => c.id !== categoryId);
+
+    return this.setState({event: event});
+  }
+
   render () {
-    console.log("redirect: " + this.state.redirectToEvents);
     return (
       <div>
         {this.state.redirectToEvents && <Redirect to="/events" />}
@@ -85,7 +118,8 @@ class ManageEventPage extends React.Component {
           onChange={this.updateEvent}
           onSave={this.saveEvent}
           saving={this.state.saving}
-          onNewCategory={this.addNewCategory} />
+          onNewCategory={this.addNewCategory} 
+          removeCategory={this.removeCategory} />
       </div>
     );
   }
@@ -106,7 +140,6 @@ function getEventById(events, eventId) {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  // TODO: Passing URL param doesn't work
   const eventId = ownProps.match.params.id; // from /event/<id>
   let categories = [{id: 0, name: '', weight: 0.0}];
   let event = {id: '', title: '', startDate: '', endDate: '', categories: categories, teamMembers: []};

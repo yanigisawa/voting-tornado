@@ -3,7 +3,13 @@ import {PropTypes} from 'prop-types';
 import TextInput from '../common/TextInput';
 import CategoryItemList from './CategoryItemList';
 
-const EventForm = ({event, allCategories, onSave, onChange, onNewCategory, loading, errors, saving}) => {
+// Inline Styles in JSX: https://speakerdeck.com/vjeux/react-css-in-js
+const EventForm = ({event, allCategories, onSave, onChange, onNewCategory, loading, errors, saving, removeCategory}) => {
+  let styles = {
+    marginLeft: 20,
+    marginBottom: 15
+  };
+
   return (
     <form>
       <TextInput
@@ -12,11 +18,14 @@ const EventForm = ({event, allCategories, onSave, onChange, onNewCategory, loadi
         value={event.title}
         onChange={onChange}
         error={errors.title} />
-
-      <CategoryItemList
-        categories={event.categories}
-        onChange={onChange}
-        onNewCategory={onNewCategory} />
+      
+      <div style={styles}>
+        <CategoryItemList
+          categories={event.categories}
+          onChange={onChange}
+          onNewCategory={onNewCategory}
+          removeCategory={removeCategory} />
+      </div>
 
       <TextInput
         name="startDate"
@@ -47,7 +56,8 @@ EventForm.propTypes = {
   onNewCategory: PropTypes.func.isRequired,
   loading : PropTypes.bool,
   errors: PropTypes.object,
-  saving: PropTypes.bool
+  saving: PropTypes.bool,
+  removeCategory: PropTypes.func.isRequired
 };
 
 export default EventForm;

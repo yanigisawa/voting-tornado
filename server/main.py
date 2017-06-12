@@ -16,14 +16,23 @@ _events = [
 class BaseEventHandler(RequestHandler):
     def prepare(self):
         self.set_header('Access-Control-Allow-Origin', 'http://localhost:3000')
-    
+        self.set_header('Access-Control-Allow-Methods', 'PUT, POST, OPTIONS, GET')
+
+    def options(self, param = None):
+        pass
 
 class EventHandler(BaseEventHandler):
-    def put(self, id):
+    def put(self, id = None):
         if id != None:
-            print(event)
+            print(id)
 
-        self.write("TODO - Update event")
+        event = json.loads(self.request.body.decode('utf-8'))
+        global _events
+        for e in _events:
+            if e['id'] == id:
+                e = event
+
+        self.write(dict(success=True, event=event))
 
 
 class EventsHandler(BaseEventHandler):
@@ -54,7 +63,8 @@ def make_app():
     Main entry point for app
     """
     return tornado.web.Application([
-        (r"/api/event/(?P<id>[^\/]+])?", EventHandler),
+        (r"/api/event/(.+)", EventHandler),
+        # (r"/api/event/(?P<id>[^\/]+])?/", EventHandler),
         (r"/api/events", EventsHandler)
     ], debug=True)
 

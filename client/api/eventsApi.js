@@ -34,7 +34,6 @@ class EventsApi {
       type: "PUT",
       dataType : "json",
       url : baseUrl + '/event/' + event.id,
-      
       data: JSON.stringify(event)
     });
   }

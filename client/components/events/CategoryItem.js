@@ -1,7 +1,7 @@
 import React from 'react';
 import {PropTypes} from 'prop-types';
 
-const CategoryItem = ({category, onChange}) => {
+const CategoryItem = ({category, onChange, removeCategory}) => {
   return (
     <tr>
       <td>
@@ -18,13 +18,21 @@ const CategoryItem = ({category, onChange}) => {
           value={category.weight}
           onChange={onChange} />
       </td>
+      <td>
+        <input type="button"
+          name={"categoryRemove" + category.id}
+          className="btn btn-danger"
+          value="Remove"
+          onClick={removeCategory} />
+      </td>
     </tr>
   );
 };
 
 CategoryItem.propTypes = {
   category: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  removeCategory: PropTypes.func.isRequired
 };
 
 export default CategoryItem;
