@@ -36,7 +36,7 @@ class BaseEventHandler(RequestHandler):
         #     key = ''.join(f.readlines()).encode()
 
         # cert = load_pem_x509_certificate(key, default_backend())
-        # try: 
+        # try:
         #     decoded = jwt.decode(token, cert.public_key(), algorithm=['RS256'], audience='lM7u46F9vGIxxoERB57g2x5l4WEQrYOd')
         # except:
         #     self.set_status(401, reason='Failed to validate JWT')
