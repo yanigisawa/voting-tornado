@@ -20,9 +20,9 @@ require.extensions['.scss'] = () => {
 // require.extensions['.css'] = () => {
 //   return;
 // };
-require.extensions['.svg'] = () => {
-  return;
-};
+// require.extensions['.svg'] = () => {
+//   return;
+// };
 
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,

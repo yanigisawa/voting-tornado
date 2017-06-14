@@ -16,8 +16,9 @@ class HomePage extends React.Component {
   render () {
     return (
     <div className="jumbotron">
-        <h1>Home page</h1>
-        <input type="submit" value="Launch Auth0" className="btn btn-primary" onClick={this.launchAuth0} />
+        <h1>Voting Tornado</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi condimentum non erat at bibendum. Nullam fermentum, nibh eget tempus ultricies, risus tellus luctus nisl, quis gravida risus turpis at justo. Nullam risus orci, placerat vitae quam vel, malesuada pulvinar risus. Mauris consequat, velit at pellentesque malesuada, ante ex molestie mi, sed facilisis ante enim eu nisi. Donec et justo eget tortor dignissim rhoncus. Nam hendrerit ligula sit amet purus accumsan cursus. Vivamus lobortis quam at gravida euismod. Ut ac lorem finibus, mattis enim eget, cursus nulla. Nulla justo enim, hendrerit sit amet felis elementum, pretium maximus leo. Donec quis magna ac diam tincidunt bibendum. Mauris eu leo vitae lectus porta fermentum.
+        </p>
     </div>
     );
   }

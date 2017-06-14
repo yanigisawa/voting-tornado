@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import createHistory from 'history/createBrowserHistory';
 import auth0 from 'auth0-js';
 import {AUTH_CONFIG} from './auth0.config';
+import AuthApi from './authApi';
 
 class Auth extends EventEmitter {
   constructor() {
@@ -20,7 +21,6 @@ class Auth extends EventEmitter {
       responseType: 'token id_token',
       scope: 'openid'
     });
-
   }
 
   login() {
@@ -30,12 +30,13 @@ class Auth extends EventEmitter {
   handleAuthentication() {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult);
-        // this.history.replace('/');
-      } else if (err) {
-        // this.history.replace('/home');
-        console.log(err);
-      }
+        AuthApi.validateJwt(authResult.idToken).done((result => {
+          console.log(authResult.idTokenPayload['http://voting-tornado.com/roles']);
+          this.setSession(authResult);
+        })).fail((result) => {
+          console.log("Failed to authentication jwt: " + result);
+        });
+      } 
     });
   }
 
@@ -65,6 +66,10 @@ class Auth extends EventEmitter {
     // access token's expiry time
     let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
+  }
+
+  getIdToken() {
+    return localStorage.getItem('id_token');
   }
 }
 

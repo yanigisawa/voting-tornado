@@ -2,6 +2,10 @@ import tornado.ioloop
 from tornado.web import RequestHandler
 from tornado.log import enable_pretty_logging
 import json
+import jwt
+from cryptography.x509 import load_pem_x509_certificate
+from cryptography.hazmat.backends import default_backend
+
 
 _events = [
     {'id': 1, 'title': 'Event 1', 'startDate' : '5/1/2017', 
@@ -14,12 +18,42 @@ _events = [
         'endDate' : '8/2/2017', 'categories' : [{'id': 0, 'name': '', 'weight': 0}]}]
 
 class BaseEventHandler(RequestHandler):
+    # TODO Make this configurable
+    _auth0PublicKey = './server/voting-tornado.pem'
+
     def prepare(self):
         self.set_header('Access-Control-Allow-Origin', 'http://localhost:3000')
         self.set_header('Access-Control-Allow-Methods', 'PUT, POST, OPTIONS, GET')
+        self.set_header('Access-Control-Allow-Headers', 'Authentication')
+        # TODO Uncomment once client code can send Authentication header
+        # if 'Authentication' not in self.request.headers.keys():
+        #     self.set_status(401, reason='Authentication header required')
+        #     return
+
+        # token = self.request.headers['Authentication'].replace('Bearer: ', '').encode()
+        # key = ''
+        # with open(self._auth0PublicKey, 'r') as f:
+        #     key = ''.join(f.readlines()).encode()
+
+        # cert = load_pem_x509_certificate(key, default_backend())
+        # try: 
+        #     decoded = jwt.decode(token, cert.public_key(), algorithm=['RS256'], audience='lM7u46F9vGIxxoERB57g2x5l4WEQrYOd')
+        # except:
+        #     self.set_status(401, reason='Failed to validate JWT')
+        #     return
+
+        # self.write(dict(success=True))
 
     def options(self, param = None):
         pass
+
+class AuthHandler(BaseEventHandler):
+    """
+    Place holder handler for authentication. All JWT authentication code
+    lives in the BaseEventHandler
+    """
+    def post(self):
+        self.write(dict(success=True))
 
 class EventHandler(BaseEventHandler):
     def put(self, id = None):
@@ -63,6 +97,7 @@ def make_app():
     Main entry point for app
     """
     return tornado.web.Application([
+        (r"/api/auth", AuthHandler),
         (r"/api/event/(.+)", EventHandler),
         # (r"/api/event/(?P<id>[^\/]+])?/", EventHandler),
         (r"/api/events", EventsHandler)

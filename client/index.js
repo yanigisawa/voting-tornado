@@ -13,7 +13,7 @@ import '../node_modules/toastr/build/toastr.min.css';
 const store = configureStore();
 store.dispatch(loadEvents());
 // store.dispatch(loadAuthors());
-const foo = "some foo string";
+
 render (
   <Provider store={store}>
     <App loading={false} />

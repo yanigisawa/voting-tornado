@@ -12,7 +12,7 @@ class EventsPage extends React.Component {
 
     this.state = {
       addEventRedirect: false
-    }
+    };
 
     this.redirectToAddEventPage = this.redirectToAddEventPage.bind(this);
   }

@@ -13,7 +13,7 @@ const EventItemRow = ({event}) => {
 };
 
 EventItemRow.propTypes = {
-  event: PropTypes.object.isRequired,
+  event: PropTypes.object.isRequired
 };
 
 export default EventItemRow;
