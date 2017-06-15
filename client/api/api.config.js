@@ -6,7 +6,7 @@ export class BaseRequest {
   constructor() {
     this.auth = new Auth();
     this.headers = {
-      Authentication: 'Bearer: ' + this.auth.getIdToken()
+      Authorization: 'Bearer: ' + this.auth.getIdToken()
     };
   }
 }

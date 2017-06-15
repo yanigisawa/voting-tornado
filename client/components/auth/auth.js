@@ -30,12 +30,13 @@ class Auth extends EventEmitter {
   handleAuthentication() {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        AuthApi.validateJwt(authResult.idToken).done((result => {
-          console.log(authResult.idTokenPayload['http://voting-tornado.com/roles']);
-          this.setSession(authResult);
-        })).fail((result) => {
-          console.log("Failed to authentication jwt: " + result);
-        });
+        this.setSession(authResult);
+        
+        // AuthApi.validateJwt(authResult.idToken).done((result => {
+        //   console.log(authResult.idTokenPayload['http://voting-tornado.com/roles']);
+        // })).fail((result) => {
+        //   console.log("Failed to authenticate jwt: " + result);
+        // });
       } 
     });
   }
@@ -47,8 +48,6 @@ class Auth extends EventEmitter {
       localStorage.setItem('access_token', authResult.accessToken);
       localStorage.setItem('id_token', authResult.idToken);
       localStorage.setItem('expires_at', expiresAt);
-      // navigate to the home route
-      // this.history.replace('/home');
     }
   }
 
@@ -57,8 +56,6 @@ class Auth extends EventEmitter {
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
-    // navigate to the home route
-    // this.history.replace('/home');
   }
 
   isAuthenticated() {

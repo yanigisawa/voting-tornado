@@ -24,7 +24,7 @@ class BaseEventHandler(RequestHandler):
     def prepare(self):
         self.set_header('Access-Control-Allow-Origin', 'http://localhost:3000')
         self.set_header('Access-Control-Allow-Methods', 'PUT, POST, OPTIONS, GET')
-        self.set_header('Access-Control-Allow-Headers', 'Authentication')
+        self.set_header('Access-Control-Allow-Headers', 'Authorization')
         # TODO Uncomment once client code can send Authentication header
         # if 'Authentication' not in self.request.headers.keys():
         #     self.set_status(401, reason='Authentication header required')

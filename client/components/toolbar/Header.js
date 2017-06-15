@@ -10,7 +10,12 @@ function login() {
   auth.login();
 }
 
-const Header = ({ loading }) => {
+const Header = ({loading, isAuthenticated}) => {
+  let loginOut = <Link to="/" onClick={login}>Login</Link>;
+  if (isAuthenticated) {
+    loginOut = <Link to="/logout" >Logout</Link>;
+  }
+
   return (
     <div>
       <h1>Voting Tornado</h1>
@@ -21,15 +26,15 @@ const Header = ({ loading }) => {
         {" | "}
         <Link to="/about" >About</Link>
         {" | "}
-        {auth.isAuthenticated() && <Link to="/logout" >Logout</Link>}
-        {!auth.isAuthenticated() && <Link to="/" onClick={login}>Login</Link>}
+        {loginOut}
       </nav>
     </div>
   );
 };
 
 Header.propTypes = {
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  isAuthenticated: PropTypes.bool
 };
 
 export default Header;

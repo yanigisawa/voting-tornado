@@ -9,8 +9,9 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import configureStore from './components/configureStore';
 import {Provider} from 'react-redux';
 import '../node_modules/toastr/build/toastr.min.css';
+import initialState from './reducers/initialState';
 
-const store = configureStore();
+const store = configureStore(initialState);
 store.dispatch(loadEvents());
 // store.dispatch(loadAuthors());
 
