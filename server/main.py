@@ -5,21 +5,17 @@ import json
 import jwt
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
-
-
-_events = [
-    {'id': 1, 'title': 'Event 1', 'startDate' : '5/1/2017', 
-        'endDate' : '5/2/2017', 'categories' : [{'id': 0, 'name': '', 'weight': 0}]},
-    {'id': 2, 'title': 'Event 2', 'startDate' : '6/1/2017', 
-        'endDate' : '6/2/2017', 'categories' : [{'id': 0, 'name': '', 'weight': 0}]},
-    {'id': 3, 'title': 'Event 3', 'startDate' : '7/1/2017', 
-        'endDate' : '7/2/2017', 'categories' : [{'id': 0, 'name': '', 'weight': 0}]},
-    {'id': 4, 'title': 'Event 4', 'startDate' : '8/1/2017', 
-        'endDate' : '8/2/2017', 'categories' : [{'id': 0, 'name': '', 'weight': 0}]}]
+from pymongo import MongoClient
+import urllib
+import config
+from models import Event
 
 class BaseEventHandler(RequestHandler):
-    # TODO Make this configurable
-    _auth0PublicKey = './server/voting-tornado.pem'
+    _auth0PublicKey = config.auth0PublicKey
+    _server = config.dbServer
+    _user = urllib.parse.quote_plus(config.dbUser)
+    _password = urllib.parse.quote_plus(config.dbPassword)
+    _dbUri = 'mongodb://{0}:{1}@{2}'.format(_user, _password, _server)
 
     def prepare(self):
         self.set_header('Access-Control-Allow-Origin', 'http://localhost:3000')
@@ -41,7 +37,7 @@ class BaseEventHandler(RequestHandler):
         # except:
         #     self.set_status(401, reason='Failed to validate JWT')
         #     return
-
+        self._db = db = MongoClient(self._dbUri)[config.database_name]
         # self.write(dict(success=True))
 
     def options(self, param = None):
@@ -61,10 +57,10 @@ class EventHandler(BaseEventHandler):
             print(id)
 
         event = json.loads(self.request.body.decode('utf-8'))
-        global _events
-        for e in _events:
-            if e['id'] == id:
-                e = event
+        # global _events
+        # for e in _events:
+        #     if e['id'] == id:
+        #         e = event
 
         self.write(dict(success=True, event=event))
 
@@ -77,19 +73,25 @@ class EventsHandler(BaseEventHandler):
         # super(EventsHandler, self).prepare()
         pass
 
+    # TODO: make request async
     def get(self):
-        self.write(dict(events=_events))
+        events = []
+        for e in self._db['events'].find().sort('startDate'):
+            e['_id'] = str(e['_id'])
+            events.append(e)
+        self.write(dict(events=events))
 
+    #TODO: Make request async
     def post(self):
-        global _events
-        print(self.request.body)
         event = json.loads(self.request.body.decode('utf-8'))
-        if event != None:
-            event['id'] = max([e['id'] for e in _events]) + 1
-        else:
-            print("No event found in post body")
+        if event == None:
+            self.write({'success': False, 'message': 'No event found in post body' })
+            return
 
-        _events.append(event)
+        # TODO: Convert event to Dict to save to mongo
+        e = Event(**event)
+        id = self._db['events'].insert_one(e).inserted_id
+        event['_id'] = str(id)
         self.write(dict(success=True, event=event))
 
 def make_app():
