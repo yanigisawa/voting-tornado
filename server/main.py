@@ -8,7 +8,7 @@ from cryptography.hazmat.backends import default_backend
 from pymongo import MongoClient
 import urllib
 import config
-from models import Event
+from models import Event, EventEncoder
 
 class BaseEventHandler(RequestHandler):
     _auth0PublicKey = config.auth0PublicKey
@@ -75,11 +75,12 @@ class EventsHandler(BaseEventHandler):
 
     # TODO: make request async
     def get(self):
-        events = []
+        events = { 'events': [] }
         for e in self._db['events'].find().sort('startDate'):
-            e['_id'] = str(e['_id'])
-            events.append(e)
-        self.write(dict(events=events))
+            events['events'].append(Event(**e))
+
+        jsonEvents = json.dumps(events, cls=EventEncoder)
+        self.write(jsonEvents)
 
     #TODO: Make request async
     def post(self):
@@ -88,8 +89,7 @@ class EventsHandler(BaseEventHandler):
             self.write({'success': False, 'message': 'No event found in post body' })
             return
 
-        # TODO: Convert event to Dict to save to mongo
-        e = Event(**event)
+        e = Event(**event).mongo_encode()
         id = self._db['events'].insert_one(e).inserted_id
         event['_id'] = str(id)
         self.write(dict(success=True, event=event))

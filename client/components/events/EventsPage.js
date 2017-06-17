@@ -5,13 +5,16 @@ import {PropTypes} from 'prop-types';
 import EventList from './EventList';
 import * as eventActions from '../../actions/eventActions';
 import {Redirect} from 'react-router-dom';
+import Auth, {Roles} from '../auth/auth';
 
 class EventsPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    const auth = new Auth();
     this.state = {
-      addEventRedirect: false
+      addEventRedirect: false,
+      allowEventEdit: auth.isAuthenticated() && auth.isInRole(Roles.Admin)
     };
 
     this.redirectToAddEventPage = this.redirectToAddEventPage.bind(this);
@@ -30,7 +33,7 @@ class EventsPage extends React.Component {
           value="Add Event"
           className="btn btn-primary"
           onClick={this.redirectToAddEventPage} />
-        <EventList events={this.props.events} />
+        <EventList events={this.props.events} allowEventEdit={this.state.allowEventEdit} />
       </div>
     );
   }

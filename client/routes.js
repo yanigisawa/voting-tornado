@@ -5,6 +5,7 @@ import EventsPage from './components/events/EventsPage';
 import ManageEventPage from './components/events/ManageEventPage';
 import Auth0CallbackPage from './components/Auth0CallbackPage';
 import LogoutPage from './components/LogoutPage';
+import ViewEventPage from './components/events/ViewEventPage';
 
 export const routes = [
   { path: '/',
@@ -22,6 +23,11 @@ export const routes = [
     path: '/event',
     exact: true,
     main: ManageEventPage
+  },
+  {
+    path: '/viewevent/:id',
+    exact: true,
+    main: ViewEventPage
   },
   { path: '/event/:id',
     main: ManageEventPage

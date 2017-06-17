@@ -74,7 +74,7 @@ class ManageEventPage extends React.Component {
     e.preventDefault();
     this.setState({saving: true});
     this.props.actions.saveEvent(this.state.event)
-      .then(() => this.redirect(), 
+      .then(() => this.redirect(),
         (xr, status, error) => {
         toastr.error("Save Failed: " + xr + " - " + status + " - " + error);
         this.setState({saving: false});
@@ -118,7 +118,7 @@ class ManageEventPage extends React.Component {
           onChange={this.updateEvent}
           onSave={this.saveEvent}
           saving={this.state.saving}
-          onNewCategory={this.addNewCategory} 
+          onNewCategory={this.addNewCategory}
           removeCategory={this.removeCategory} />
       </div>
     );
@@ -133,7 +133,6 @@ ManageEventPage.propTypes = {
 
 
 function getEventById(events, eventId) {
-  eventId = parseInt(eventId);
   const filteredEvents = events.filter(e => e.id === eventId);
   if (filteredEvents.length) { return filteredEvents[0]; }
   return {};

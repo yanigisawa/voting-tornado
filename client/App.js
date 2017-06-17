@@ -27,7 +27,7 @@ class App extends React.Component {
       <div className="container-fluid">
         <Router>
           <div>
-            <Header loading={this.props.loading} isAuthenticated={this.props.isAuthenticated} /> 
+            <Header loading={this.props.loading} isAuthenticated={this.props.isAuthenticated} />
 
             {routes.map((route, index) => (
               <Route
@@ -50,7 +50,6 @@ App.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  console.log("App.js mapStateToProps: " + state.isAuthenticated);
   let auth = new Auth();
   return {
     loading: false,

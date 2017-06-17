@@ -2,7 +2,8 @@ import React from 'react';
 import {PropTypes} from 'prop-types';
 import EventItemRow from './EventItemRow';
 
-const EventList = ({events}) => {
+const EventList = ({events, allowEventEdit}) => {
+
   return (
     <div>
       <table className="table">
@@ -11,11 +12,12 @@ const EventList = ({events}) => {
             <th>Title</th>
             <th>Start Date</th>
             <th>End Date</th>
+            {allowEventEdit && <th>Edit</th>}
           </tr>
         </thead>
         <tbody>
-          {events.map(event => 
-            <EventItemRow key={event.id.toString()} event={event} />
+          {events && events.map(event =>
+            <EventItemRow key={event.id.toString()} event={event} allowEventEdit={allowEventEdit} />
           )}
         </tbody>
       </table>
@@ -24,7 +26,8 @@ const EventList = ({events}) => {
 };
 
 EventList.propTypes = {
-  events: PropTypes.array.isRequired
+  events: PropTypes.array.isRequired,
+  allowEventEdit: PropTypes.bool.isRequired
 };
 
 export default EventList;

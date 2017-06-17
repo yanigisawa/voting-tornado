@@ -30,14 +30,13 @@ class Auth extends EventEmitter {
   handleAuthentication() {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult);
-        
-        // AuthApi.validateJwt(authResult.idToken).done((result => {
-        //   console.log(authResult.idTokenPayload['http://voting-tornado.com/roles']);
-        // })).fail((result) => {
-        //   console.log("Failed to authenticate jwt: " + result);
-        // });
-      } 
+        AuthApi.validateJwt(authResult.idToken).done((result => {
+          this.setSession(authResult);
+          console.log(authResult.idTokenPayload['http://voting-tornado.com/roles']);
+        })).fail((result) => {
+          console.log("Failed to authenticate jwt: " + result);
+        });
+      }
     });
   }
 
@@ -48,6 +47,7 @@ class Auth extends EventEmitter {
       localStorage.setItem('access_token', authResult.accessToken);
       localStorage.setItem('id_token', authResult.idToken);
       localStorage.setItem('expires_at', expiresAt);
+      localStorage.setItem('roles', authResult.idTokenPayload['http://voting-tornado.com/roles']);
     }
   }
 
@@ -56,13 +56,19 @@ class Auth extends EventEmitter {
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
+    localStorage.removeItem('roles');
   }
 
   isAuthenticated() {
-    // Check whether the current time is past the 
+    // Check whether the current time is past the
     // access token's expiry time
     let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
+  }
+
+  isInRole(roleName) {
+    const roles = localStorage.getItem('roles');
+    return roles.includes(roleName);
   }
 
   getIdToken() {
@@ -71,3 +77,7 @@ class Auth extends EventEmitter {
 }
 
 export default Auth;
+export const Roles = {
+  Admin: 'Admin',
+  User: 'User'
+};
