@@ -4,12 +4,10 @@ import {beginAjaxCall, ajaxCallError} from '../../actions/ajaxStatusActions';
 import Auth from './auth';
 
 export function loginSuccess() {
-  console.log("from login success");
   return {type: types.LOGIN_SUCCESS };
 }
 
 export function logoutSuccess() {
-  console.log("from logout success");
   return {type: types.LOGOUT_SUCCESS };
 }
 

@@ -3,9 +3,8 @@ import urllib
 from datetime import datetime
 import json
 import config
-from models import Event, EventEncoder
+from models import Event, EventEncoder, Team, TeamMember
 import requests
-
 
 server = config.dbServer
 user = urllib.parse.quote_plus(config.dbUser)
@@ -58,74 +57,69 @@ def getJsonEvents():
         jsonArr.append(tmp)
     return json.dumps(jsonArr)
 
-
-
-def insert_events():
+def insert_events(events):
     client = MongoClient(uri)
     db = client['voting-tornado-db']
-    events = db['events']
-    eventIds = events.insert_many(_events)
-    print(eventIds.inserted_ids)
+    db_events = db['events']
+    mongo_events = [Event(e).mongo_encode() for e in events]
+    inserted_events = db_events.insert_many(mongo_events)
+    return insert_events
 
-def test_query():
-
-    # e = {'id': 5, 'title': 'Event 0', 'startDate' : '4/1/2017',
-    #     'endDate' : '4/2/2017', 'categories' : [{'id': 0, 'name': '', 'weight': 0}]}
-    db = MongoClient(uri)['voting-tornado-db']
-    # db['test-events'].insert_one(e)
-    for e in db['events'].find().sort('startDate'):
-        print(e)
-
-def test_event_to_dict():
-    from models import Category, Event
-    eJson = json.loads(getJsonEvents())
-    events = [Event(**e) for e in eJson]
-    for e in events:
-        print(e.__dict__)
-
-def test_group_request():
-    # from tornado.httpclient import HTTPClient, HTTPError, HTTPRequest
-    # client = HTTPClient()
-    # client.close()
-
-    # Receive the below SSL error:
-    # WARNING:tornado.general:SSL Error on 9 ('216.58.192.196', 443): [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:749)
-    # Error: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:749)
-    # req = HTTPRequest(url='https://www.google.com')
-    # resp = client.fetch(req)
-
+def get_auth0_groups():
     headers = { 'content-type': 'application/json' }
     data = {
         'client_id': config.auth0_clientId, 'client_secret': config.auth0_secret,
         'audience': 'urn:auth0-authz-api', 'grant_type': 'client_credentials' }
     payload = json.dumps(data)
-    print(payload)
     resp = requests.post(config.auth0_url + '/oauth/token', headers=headers, data=payload)
-    print('{0} - {1}'.format(resp.status_code, resp.reason))
+    resp.raise_for_status()
     token_json = resp.json()
 
     headers = { 'authorization': token_json['token_type'] + ' ' + token_json['access_token']}
-
     resp = requests.get(config.auth0_authorization_url + '/groups', headers=headers)
-    groups = resp.json()
-    # print('Groups: {0}'.format(groups))
+    resp.raise_for_status()
+    return resp.json()
 
-def test_auth0_query():
+def get_auth0_users():
     headers = { 'content-type': 'application/json' }
     data = {
         'client_id': config.auth0_clientId, 'client_secret': config.auth0_secret,
         'audience': config.auth0_url + '/api/v2/', 'grant_type': 'client_credentials' }
     management_auth_req = requests.post(config.auth0_url + '/oauth/token', headers=headers, data=json.dumps(data))
-    print('Management Auth: {0} - {1}'.format(management_auth_req.status_code, management_auth_req.reason))
+    management_auth_req.raise_for_status()
     token_json = management_auth_req.json()
 
     headers = { 'authorization': token_json['token_type'] + ' ' + token_json['access_token']}
     users_req = requests.get(config.auth0_url + '/api/v2/users', headers=headers)
-    print(users_req.text)
-    # for g in groups:
+    return users_req.json()
+
+def seedData():
+    # Query groups from auth0
+    groups = get_auth0_groups()['groups']
+    teams = []
+    # Query users from auth0
+    users = get_auth0_users()
+    for g in groups:
+        members = []
+        for auth0Id in g['members']:
+            member = next( (u for u in users if u['user_id'] == auth0Id), None)
+            if 'app_metadata' in member.keys():
+                if 'team_lead' in member['app_metadata']:
+                    g['team_lead'] = member['user_id']
+            if member != None:
+                members.append(member)
+        g['members'] = members
+        teams.append(g)
+
+    # Create all teams in all events
+    events = []
+    for e in _events:
+        ev = e
+        ev.update()
+        ev['teams'] = teams
+        events.append(ev)
+    insert_events(events)
 
 
 if __name__ == "__main__":
-    test_auth0_query()
-    # insert_events()
-    # main()
+    seedData()

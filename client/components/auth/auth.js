@@ -32,7 +32,6 @@ class Auth extends EventEmitter {
       if (authResult && authResult.accessToken && authResult.idToken) {
         AuthApi.validateJwt(authResult.idToken).done((result => {
           this.setSession(authResult);
-          console.log(authResult.idTokenPayload['http://voting-tornado.com/roles']);
         })).fail((result) => {
           console.log("Failed to authenticate jwt: " + result);
         });

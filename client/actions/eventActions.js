@@ -32,7 +32,6 @@ export function saveEvent(event) {
 
     let apiMethod = event.id ? eventsApi.updateEvent : eventsApi.createEvent;
     return apiMethod(event).then(response => {
-      console.log("saved Event: " + response.success);
       if (event.id) {
          dispatch(updateEventSuccess(response.event));
       } else {
@@ -40,9 +39,6 @@ export function saveEvent(event) {
       }
     }, (xr, status, error) => {
       dispatch(ajaxCallError());
-      console.log("failed method called: " + error);
-      // debugger;
-      // throw(error);
     });
   };
 }
