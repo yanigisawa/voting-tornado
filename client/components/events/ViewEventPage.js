@@ -9,10 +9,8 @@ class ViewEventPage extends React.Component {
   }
 
   render() {
-    debugger;
     return (
       <div>
-        <h2>{this.props.event.title}</h2>
         <h3><label>Title</label> - {this.props.event.title}</h3>
         <h3><label>Start Date</label> - {this.props.event.startDate}</h3>
         <h3><label>End Date</label> - {this.props.event.endDate}</h3>
@@ -20,15 +18,22 @@ class ViewEventPage extends React.Component {
         <h3>Categories</h3>
         }
         {this.props.event.categories && this.props.event.categories.map(c =>
-          <h4 key={c.id}><label>Name:</label> {c.name} <label>Weight:</label>{c.weight}</h4>
+          <div key={c.id}>
+            <dl className="dl-horizontal tornado">
+              <dt>Name</dt>
+              <dd>{c.name}</dd>
+              <dt>Weight</dt>
+              <dd>{c.weight}</dd>
+            </dl>
+          </div>
         )}
         <h3>Teams</h3>
         {
           this.props.event.teams && this.props.event.teams.map(t =>
             <div key={t._id}>
-              <dl className="dl-horizontal">
+              <dl className="dl-horizontal tornado">
                 <dt>Name</dt>
-                <dd>{t.name}</dd>
+                <dd><b>{t.name}</b></dd>
                 <dt>Description</dt>
                 <dd>{t.description}</dd>
                 <dt>Members</dt>

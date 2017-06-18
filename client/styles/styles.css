@@ -12,3 +12,13 @@ a.active {
 nav {
   padding-top: 20px;
 }
+
+dl.tornado dt  {
+  text-align: left;
+  width: 133px;
+}
+
+dl.tornado dd  {
+  margin-left: 114px;
+  /*margin-left: -64px;*/
+}

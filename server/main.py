@@ -6,6 +6,7 @@ import jwt
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 import urllib
 import config
 from models import Event, EventEncoder
@@ -57,14 +58,12 @@ class EventHandler(BaseEventHandler):
         if id != None:
             print(id)
 
-        event = json.loads(self.request.body.decode('utf-8'))
-        # global _events
-        # for e in _events:
-        #     if e['id'] == id:
-        #         e = event
+        req_event = json.loads(self.request.body.decode('utf-8'))
+        event_model = Event(req_event)
+        result = self._db.events.replace_one({'_id': ObjectId(req_event['id'])}, event_model.mongo_encode())
+        json_event = json.dumps(dict(success=True, event=event_model), cls=EventEncoder)
 
-        self.write(dict(success=True, event=event))
-
+        self.write(json_event)
 
 class EventsHandler(BaseEventHandler):
     """

@@ -42,6 +42,9 @@ class Team():
 
 class Event():
     def __init__(self, args):
+        if 'id' in args.keys():
+            self._id = ObjectId(args['id'])
+
         if '_id' in args.keys():
             if args['_id'] is ObjectId:
                 self._id = str(args['_id'])
