@@ -21,6 +21,7 @@ class BaseEventHandler(RequestHandler):
         self.set_header('Access-Control-Allow-Origin', 'http://localhost:3000')
         self.set_header('Access-Control-Allow-Methods', 'PUT, POST, OPTIONS, GET')
         self.set_header('Access-Control-Allow-Headers', 'Authorization')
+        self.set_header('content-type', 'application/json')
         # TODO Uncomment once client code can send Authentication header
         # if 'Authentication' not in self.request.headers.keys():
         #     self.set_status(401, reason='Authentication header required')
@@ -77,7 +78,7 @@ class EventsHandler(BaseEventHandler):
     def get(self):
         events = { 'events': [] }
         for e in self._db['events'].find().sort('startDate'):
-            events['events'].append(Event(**e))
+            events['events'].append(Event(e))
 
         jsonEvents = json.dumps(events, cls=EventEncoder)
         self.write(jsonEvents)
@@ -89,7 +90,7 @@ class EventsHandler(BaseEventHandler):
             self.write({'success': False, 'message': 'No event found in post body' })
             return
 
-        e = Event(**event).mongo_encode()
+        e = Event(event).mongo_encode()
         id = self._db['events'].insert_one(e).inserted_id
         event['_id'] = str(id)
         self.write(dict(success=True, event=event))

@@ -15,24 +15,28 @@ class Category():
         return "{0}: {1} {2}".format(self.id, self.name, self.weight)
 
 class TeamMember():
-    def __init__(self, args):
-        self.auth0_user_id = args['user_id']
+    def __init__(self, args, is_team_lead):
+        self._user_id = args['_user_id']
         self.email = args['email']
         self.picture = args['picture']
+        self.is_team_lead = is_team_lead
 
     def __repr__(self):
-        return "{0}: {1} {2}".format(self.auth0_user_id, self.email, self.picture)
+        return "{0}: {1} {2}".format(self._user_id, self.email, self.picture)
 
 class Team():
     def __init__(self, args):
-        self.auth0Id = args['_id']
+        self._id = args['_id']
         self.name = args['name']
         self.description = args['description']
         self.team_lead = args['team_lead']
-        self.members = [TeamMember(tm) for tm in args['members']]
+        members = [TeamMember(tm, tm['_user_id'] == self.team_lead) for tm in args['members']]
+        members = sorted(members, key=lambda m: not m.is_team_lead)
+        self.members = members
+        self.team_lead_email = next( (u for u in self.members if u._user_id == self.team_lead), None).email
 
     def __repr__(self):
-        return '{0}: Lead: {4} {1} {2}: {3}'.format(self.auth0Id,
+        return '{0}: Lead: {4} {1} {2}: {3}'.format(self._id,
             self.name, self.description, '\n\t'.join([str(m) for m in self.members]),
             self.team_lead)
 
@@ -47,7 +51,7 @@ class Event():
         self.startDate = args['startDate']
         self.endDate = args['endDate']
         self.categories = [Category(c) for c in args['categories']]
-        self.teams = [Team(t) for t in args['teams']]
+        self.teams = sorted([Team(t) for t in args['teams']], key=lambda team: team.name)
 
     @property
     def startDate(self):
@@ -77,9 +81,16 @@ class Event():
         return str(self._id)
 
     def mongo_encode(self):
-        e = self.__dict__
-        e['categories'] = [c.__dict__ for c in self.categories]
-        e['teams'] = [t.__dict__ for t in self.teams]
+        e = {'title': self.title,
+            'startDate': self.startDate,
+            'endDate': self.endDate,
+            'categories': [c.__dict__ for c in self.categories],
+            'teams': [t.__dict__ for t in self.teams] }
+
+        # _id isn't assigned until Object is saved to Mongo
+        if '_id' in self.__dict__.keys():
+            e['_id'] = self._id
+
         for t in e['teams']:
             t['members'] = [m.__dict__ for m in t['members']]
         return e

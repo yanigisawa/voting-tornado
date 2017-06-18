@@ -9,6 +9,7 @@ class ViewEventPage extends React.Component {
   }
 
   render() {
+    debugger;
     return (
       <div>
         <h2>{this.props.event.title}</h2>
@@ -21,6 +22,25 @@ class ViewEventPage extends React.Component {
         {this.props.event.categories && this.props.event.categories.map(c =>
           <h4 key={c.id}><label>Name:</label> {c.name} <label>Weight:</label>{c.weight}</h4>
         )}
+        <h3>Teams</h3>
+        {
+          this.props.event.teams && this.props.event.teams.map(t =>
+            <div key={t._id}>
+              <dl className="dl-horizontal">
+                <dt>Name</dt>
+                <dd>{t.name}</dd>
+                <dt>Description</dt>
+                <dd>{t.description}</dd>
+                <dt>Members</dt>
+                <dd><ul>
+                {t.members.map(m =>
+                  <li key={m._user_id}>{m.email} {m.is_team_lead && <b>Leader</b>}</li>
+                )}
+              </ul></dd>
+              </dl>
+            </div>
+          )
+        }
       </div>
     );
   }
@@ -39,7 +59,7 @@ function getEventById(events, eventId) {
 const mapStateToProps = (state, ownProps) => {
   const eventId = ownProps.match.params.id; // from /event/<id>
   let categories = [{id: 0, name: '', weight: 0.0}];
-  let event = {id: '', title: '', startDate: '', endDate: '', categories: categories, teamMembers: []};
+  let event = {id: '', title: '', startDate: '', endDate: '', categories: categories, team: []};
   if (eventId && state.events.length) {
     event = getEventById(state.events, eventId);
   }
