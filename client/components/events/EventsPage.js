@@ -14,7 +14,8 @@ class EventsPage extends React.Component {
     const auth = new Auth();
     this.state = {
       addEventRedirect: false,
-      allowEventEdit: auth.isAuthenticated() && auth.isInRole(Roles.Admin)
+      allowEventEdit: auth.isAuthenticated() && auth.isInRole(Roles.Admin),
+      allowEventVoting: auth.isAuthenticated()
     };
 
     this.redirectToAddEventPage = this.redirectToAddEventPage.bind(this);
@@ -33,7 +34,7 @@ class EventsPage extends React.Component {
           value="Add Event"
           className="btn btn-primary"
           onClick={this.redirectToAddEventPage} />
-        <EventList events={this.props.events} allowEventEdit={this.state.allowEventEdit} />
+        <EventList events={this.props.events} allowEventEdit={this.state.allowEventEdit} allowEventVoting={this.state.allowEventVoting} />
       </div>
     );
   }

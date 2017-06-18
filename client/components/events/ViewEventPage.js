@@ -62,7 +62,7 @@ function getEventById(events, eventId) {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const eventId = ownProps.match.params.id; // from /event/<id>
+  const eventId = ownProps.match.params.id; // from /viewevent/<id>
   let categories = [{id: 0, name: '', weight: 0.0}];
   let event = {id: '', title: '', startDate: '', endDate: '', categories: categories, team: []};
   if (eventId && state.events.length) {

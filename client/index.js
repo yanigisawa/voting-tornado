@@ -6,6 +6,7 @@ import {loadEvents} from './actions/eventActions';
 // import {loadAuthors} from './actions/authorActions';
 import './styles/styles.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// import '../node_modules/bootstrap/dist/js/bootstrap.min.js';
 import configureStore from './components/configureStore';
 import {Provider} from 'react-redux';
 import '../node_modules/toastr/build/toastr.min.css';
