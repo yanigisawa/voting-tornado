@@ -2,17 +2,26 @@ import React from 'react';
 import {PropTypes} from 'prop-types';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
+import jquery from 'jquery';
 
 
 class TeamVotePage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    this.state = {
+      categories: props.categories
+    };
+
     this.saveVote = this.saveVote.bind(this);
   }
 
   saveVote() {
-    alert('call save vote!');
+    debugger;
+    for (let i = 0; i < this.props.categories.length; i++) {
+      let radio = jquery('[name=' + i + 'vote]:checked');
+      console.log(radio.val());
+    }
   }
 
   render() {
@@ -25,19 +34,19 @@ class TeamVotePage extends React.Component {
               <h4>{c.name}</h4>
               <div className="btn-group" role="group" data-toggle="buttons">
                 <label className="btn btn-default">
-                  <input type="radio" name={c.id + "vote"} id={c.id + "_vote_1"} autoComplete="off" />1
+                  <input type="radio" name={c.id + "vote"} value="1" autoComplete="off" />1
                 </label>
                 <label className="btn btn-default">
-                  <input type="radio" name={c.id + "vote"} id={c.id + "_vote_1"} autoComplete="off" />2
+                  <input type="radio" name={c.id + "vote"} value="2" autoComplete="off" />2
                 </label>
                 <label className="btn btn-default">
-                  <input type="radio" name={c.id + "vote"} id={c.id + "_vote_1"} autoComplete="off" />3
+                  <input type="radio" name={c.id + "vote"} value="3" autoComplete="off" />3
                 </label>
                 <label className="btn btn-default">
-                  <input type="radio" name={c.id + "vote"} id={c.id + "_vote_1"} autoComplete="off" />4
+                  <input type="radio" name={c.id + "vote"} value="4" autoComplete="off" />4
                 </label>
                 <label className="btn btn-default">
-                  <input type="radio" name={c.id + "vote"} id={c.id + "_vote_1"} autoComplete="off" />5
+                  <input type="radio" name={c.id + "vote"} value="5" autoComplete="off" />5
                 </label>
               </div>
             </div>
@@ -64,7 +73,7 @@ function getEventById(events, eventId) {
 
 function getInitialEvent() {
   let categories = [{id: 0, name: '', weight: 0.0}];
-  let teams = [{id: 0, description: '', members: []}]
+  let teams = [{id: 0, description: '', members: []}];
   return {id: '', title: '', startDate: '', endDate: '', categories: categories, teams: teams};
 }
 
