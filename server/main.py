@@ -9,7 +9,7 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import urllib
 import config
-from models import Event, EventEncoder
+from models import Event, EventEncoder, Vote
 
 class BaseEventHandler(RequestHandler):
     _auth0PublicKey = config.auth0PublicKey
@@ -42,8 +42,18 @@ class BaseEventHandler(RequestHandler):
         self._db = db = MongoClient(self._dbUri)[config.database_name]
         # self.write(dict(success=True))
 
+    def get_dict_from_json(self):
+        return json.loads(self.request.body.decode('utf-8'))
+
     def options(self, param = None):
         pass
+
+class VoteHandler(BaseEventHandler):
+    def post(self):
+        req_vote = self.get_dict_from_json()
+        v = Vote(req_vote).mongo_encode()
+        v['_id'] = str(self._db.votes.insert_one(v).inserted_id)
+        self.write({ 'success': True, 'vote': v})
 
 class AuthHandler(BaseEventHandler):
     """
@@ -58,7 +68,7 @@ class EventHandler(BaseEventHandler):
         if id != None:
             print(id)
 
-        req_event = json.loads(self.request.body.decode('utf-8'))
+        req_event = self.get_dict_from_json()
         event_model = Event(req_event)
         result = self._db.events.replace_one({'_id': ObjectId(req_event['id'])}, event_model.mongo_encode())
         json_event = json.dumps(dict(success=True, event=event_model), cls=EventEncoder)
@@ -84,7 +94,7 @@ class EventsHandler(BaseEventHandler):
 
     #TODO: Make request async
     def post(self):
-        event = json.loads(self.request.body.decode('utf-8'))
+        event = self.get_dict_from_json()
         if event == None:
             self.write({'success': False, 'message': 'No event found in post body' })
             return
@@ -101,6 +111,7 @@ def make_app():
     return tornado.web.Application([
         (r"/api/auth", AuthHandler),
         (r"/api/event/(.+)", EventHandler),
+        (r"/api/vote", VoteHandler),
         # (r"/api/event/(?P<id>[^\/]+])?/", EventHandler),
         (r"/api/events", EventsHandler)
     ], debug=True)

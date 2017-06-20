@@ -8,8 +8,11 @@ def getDate(dateString):
 class Category():
     def __init__(self, args):
         self.id = args['id']
-        self.name = args['name']
+        if 'name' in args.keys():
+            self.name = args['name']
         self.weight = args['weight']
+        if 'rank' in args.keys():
+            self.rank = args['rank']
 
     def __repr__(self):
         return "{0}: {1} {2}".format(self.id, self.name, self.weight)
@@ -102,6 +105,25 @@ class Event():
         return "{0}: {1} - {2} - {3} - {4} \nTeams {5}".format(
             'id', self.title, self.startDate, self.endDate,
             self.categories, '\n\t'.join(self.teams))
+
+class TeamVote():
+    def __init__(self, arg):
+        self.teamId = arg['teamId']
+        self.categories = [Category(c) for c in arg['categories']]
+
+class Vote():
+    def __init__(self, arg):
+        self.eventId = arg['eventId']
+        self.teamVotes = [TeamVote(tv) for tv in arg['teamVotes']]
+
+    def mongo_encode(self):
+        v = { 'eventId': self.eventId,
+            'teamVotes': [tv.__dict__ for tv in self.teamVotes]
+        }
+        for team in v['teamVotes']:
+            team['categories'] = [c.__dict__ for c in team['categories']]
+
+        return v
 
 class EventEncoder(JSONEncoder):
     def default(self, o): # pylint: disable=E0202

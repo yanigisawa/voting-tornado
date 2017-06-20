@@ -1,14 +1,12 @@
-import Auth from '../components/auth/auth';
 import jquery from 'jquery';
 import {apiUrl, BaseRequest} from './api.config';
 
-// TODO: Make API Configurable
 const baseUrl = apiUrl;
 const baseRequest = new BaseRequest();
 
 class EventsApi {
   static getAllEvents() {
-    
+
     return jquery.ajax({
       headers : baseRequest.headers,
       dataType : "json",
