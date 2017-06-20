@@ -8,6 +8,7 @@ import LogoutPage from './components/LogoutPage';
 import ViewEventPage from './components/events/ViewEventPage';
 import EventVotePage from './components/events/EventVotePage';
 import TeamVotePage from './components/events/TeamVotePage';
+import ResultsPage from './components/events/ResultsPage';
 
 export const routes = [
   { path: '/',
@@ -35,6 +36,11 @@ export const routes = [
     path: '/vote/:id',
     exact: true,
     main: EventVotePage
+  },
+  {
+    path: '/results/:id',
+    exact: true,
+    main: ResultsPage
   },
   {
     path: '/vote/:event_id/team/:team_id',

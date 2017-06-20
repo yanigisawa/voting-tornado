@@ -57,7 +57,6 @@ class ManageEventPage extends React.Component {
       } else {
         event[field] = value;
       }
-      // debugger;
       return event;
     };
 

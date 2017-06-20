@@ -63,7 +63,24 @@ class EventVotePage extends React.Component {
     this.render();
   }
 
+  voteIsComplete() {
+    let expectedVotes = this.state.event.categories.length * this.state.event.teams.length;
+    let actualVotes = 0;
+    this.state.teamVotes.map(tv => {
+      tv.categories.map(c => {
+        if (c.rank) { actualVotes++; }
+      });
+    });
+
+    return actualVotes === expectedVotes;
+  }
+
   saveVote() {
+    if (!this.voteIsComplete()) {
+      toastr.error('Please Vote on all teams in all categories to save your vote');
+      return;
+    }
+
     this.setState({saving: true});
     let vote = {
       eventId: this.state.event.id,
@@ -93,20 +110,19 @@ class EventVotePage extends React.Component {
   }
 
   getCompletedCount(teamId) {
-    console.log('getCompleted count');
     let teamVote = this.state.teamVotes.find(t => t.teamId === teamId);
     let total = this.props.event.categories.length;
     let initialCompletedCount = "0 / " + total;
     if (!teamVote) { return initialCompletedCount; }
     if (!teamVote.categoryVoteCount) { return initialCompletedCount;}
 
-    console.log(teamVote['categoryVoteCount']);
     return teamVote['categoryVoteCount'];
   }
 
   render() {
     return (
       <div>
+        {this.state.redirectToResults && <Redirect to={"/results/" + this.state.event.id} />}
         <h3>{this.props.event.title} - Voting</h3>
         <div className="panel-group" role="tablist" id="accordion">
         {this.props.event.teams && this.props.event.teams.map(t =>
@@ -148,7 +164,9 @@ class EventVotePage extends React.Component {
           </div>
         )}
         </div>
-        <input className="btn btn-primary" type="submit" value="Save" onClick={this.saveVote} />
+        <input className="btn btn-primary"
+          disabled={this.state.saving}
+          type="submit" value={this.state.saving ? "Saving..." : "Save"} onClick={this.saveVote} />
       </div>
     );
   }
@@ -183,8 +201,7 @@ const mapStateToProps = (state, ownProps) => {
 
         let vote = {
           teamId: t._id,
-          categories: categories,
-          rank: 0
+          categories: categories
         };
         votes.push(vote);
       });
