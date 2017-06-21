@@ -1,5 +1,6 @@
 import tornado.ioloop
 from tornado.web import RequestHandler
+from tornado.websocket import WebSocketHandler
 from tornado.log import enable_pretty_logging
 import json
 import jwt
@@ -10,6 +11,7 @@ from bson.objectid import ObjectId
 import urllib
 import config
 from models import Event, EventEncoder, Vote
+from threading import Lock
 
 class BaseEventHandler(RequestHandler):
     _auth0PublicKey = config.auth0PublicKey
@@ -104,6 +106,43 @@ class EventsHandler(BaseEventHandler):
         event['_id'] = str(id)
         self.write(dict(success=True, event=event))
 
+class VoteSocketHandler(WebSocketHandler):
+    connections = set()
+    _lock = Lock()
+
+    def open(self):
+        self._lock.acquire()
+        try:
+            self.connections.add(self)
+        finally:
+            self._lock.release()
+        print('WebSocket opened')
+
+    def on_message(self, message):
+        # msg = json.dumps({'success': True, 'message': message})
+        [con.write_message(message) for con in self.connections]
+
+    def on_close(self):
+        self._lock.acquire()
+        try:
+            self.connections.remove(self)
+        finally:
+            self._lock.release()
+        print('WebSocket closed')
+
+    # Allow localhost origin
+    def check_origin(self, origin):
+        """
+        When hosting the client code from a separate url, it is
+        required to explicitly allow origins to connect via the
+        web socket. Any other domain will receive a 403
+
+        An alternative approach could use url parsing:
+            parsed_origin = urllib.parse.urlparse(origin)
+            return parsed_origin.netloc.endswith(".mydomain.com")
+        """
+        return origin == "http://localhost:3000"
+
 def make_app():
     """
     Main entry point for app
@@ -112,6 +151,7 @@ def make_app():
         (r"/api/auth", AuthHandler),
         (r"/api/event/(.+)", EventHandler),
         (r"/api/vote", VoteHandler),
+        (r"/api/ws/votes",  VoteSocketHandler),
         # (r"/api/event/(?P<id>[^\/]+])?/", EventHandler),
         (r"/api/events", EventsHandler)
     ], debug=True)

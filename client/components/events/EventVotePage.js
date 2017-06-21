@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import {Link, Redirect} from 'react-router-dom';
 import * as voteActions from '../../actions/voteActions';
 import toastr from 'toastr';
+import {wsUrl} from '../../api/api.config';
 
 class EventVotePage extends React.Component {
   constructor(props, context) {
@@ -22,6 +23,17 @@ class EventVotePage extends React.Component {
     this.redirect = this.redirect.bind(this);
     this.getCompletedCount = this.getCompletedCount.bind(this);
   }
+
+  componentDidMount() {
+    this.ws = new WebSocket(wsUrl);
+    this.ws.onerror = e => console.log(`WebSocket error`);
+    this.ws.onclose = e => !e.wasClean && console.log(`error: WebSocket error: ${e.code} ${e.reason}`);
+  }
+
+  componentWillUnmount() {
+    this.ws.close()
+  }
+
 
   componentWillReceiveProps(nextProps) {
     if (this.state.event.id !== nextProps.event.id) {
@@ -89,7 +101,10 @@ class EventVotePage extends React.Component {
     };
 
     this.props.actions.saveVote(vote)
-      .then(() => this.redirect(),
+      .then(() => {
+        this.redirect()
+        this.ws.send(JSON.stringify(vote));
+      },
         (xr, status, error) => {
         toastr.error("Save Failed: " + xr + " - " + status + " - " + error);
         this.setState({saving: false});
@@ -121,7 +136,7 @@ class EventVotePage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="col-md-8">
         {this.state.redirectToResults && <Redirect to={"/results/" + this.state.event.id} />}
         <h3>{this.props.event.title} - Voting</h3>
         <div className="panel-group" role="tablist" id="accordion">

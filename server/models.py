@@ -125,6 +125,17 @@ class Vote():
 
         return v
 
+class VoteCalculator():
+    def __init__(self, votes):
+        self.votes = votes
+
+    def category_average(self, teamId, categoryId):
+        return 0
+
+    @property
+    def vote_count(self):
+        return len(self.votes)
+
 class EventEncoder(JSONEncoder):
     def default(self, o): # pylint: disable=E0202
         if isinstance(o, ObjectId):
