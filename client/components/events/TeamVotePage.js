@@ -17,7 +17,6 @@ class TeamVotePage extends React.Component {
   }
 
   saveVote() {
-    debugger;
     for (let i = 0; i < this.props.categories.length; i++) {
       let radio = jquery('[name=' + i + 'vote]:checked');
       console.log(radio.val());
@@ -78,7 +77,6 @@ function getInitialEvent() {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  debugger;
   const eventId = ownProps.match.params.event_id; // from /vote/<event_id>/team/<team_id>
   const teamId = ownProps.match.params.team_id; // from /vote/<event_id>/team/<team_id>
   let event = getInitialEvent();

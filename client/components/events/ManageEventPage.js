@@ -74,7 +74,6 @@ class ManageEventPage extends React.Component {
     this.setState({saving: true});
     this.props.actions.saveEvent(this.state.event)
       .then((response) => {
-        debugger;
         this.redirect();
       },
         (xr, status, error) => {

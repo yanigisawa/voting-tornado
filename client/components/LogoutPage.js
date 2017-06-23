@@ -14,7 +14,7 @@ class LogoutPage extends React.Component {
 
   componentWillMount() {
     this.auth.logout();
-    this.props.dispatch(authActions.logout());
+    // this.props.dispatch(authActions.logout());
   }
 
   render() {

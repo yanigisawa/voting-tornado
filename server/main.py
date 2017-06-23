@@ -64,9 +64,6 @@ class AuthHandler(BaseEventHandler):
 
 class EventHandler(BaseEventHandler):
     async def put(self, id = None):
-        if id != None:
-            print(id)
-
         req_event = self.get_dict_from_json()
         event_model = Event(req_event)
         result = await self._db.events.replace_one({'_id': ObjectId(req_event['id'])}, event_model.mongo_encode())

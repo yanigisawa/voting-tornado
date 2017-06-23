@@ -42,7 +42,7 @@ class ResultsPage extends React.Component {
         <h2>Show Results Here</h2>
         <p>Result Count: {this.state.results.length}</p>
         <ul className="list-unstyled">
-          {this.state.results.map((result) => {
+          {this.state.results && this.state.results.map((result) => {
             <li> {result.eventId} </li>;
           })}
         </ul>

@@ -30,11 +30,6 @@ class EventVotePage extends React.Component {
     this.ws.onclose = e => !e.wasClean && console.log(`error: WebSocket error: ${e.code} ${e.reason}`);
   }
 
-  componentWillUnmount() {
-    this.ws.close()
-  }
-
-
   componentWillReceiveProps(nextProps) {
     if (this.state.event.id !== nextProps.event.id) {
       this.setState({
@@ -42,6 +37,10 @@ class EventVotePage extends React.Component {
         teamVotes: JSON.parse(JSON.stringify(nextProps.teamVotes))
       });
     }
+  }
+
+  componentWillUnmount() {
+    this.ws.close()
   }
 
   getTeamVoteById(teamVotes, teamId) {

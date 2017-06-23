@@ -19,5 +19,5 @@ export function saveVote(vote) {
     }, (xr, status, error) => {
       dispatch(ajaxCallError());
     });
-  }
+  };
 }

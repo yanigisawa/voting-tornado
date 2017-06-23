@@ -32,7 +32,6 @@ export function saveEvent(event) {
 
     let apiMethod = event.id ? eventsApi.updateEvent : eventsApi.createEvent;
     return apiMethod(event).then(response => {
-      debugger;
       if (event.id) {
          dispatch(updateEventSuccess(response.event));
       } else {
