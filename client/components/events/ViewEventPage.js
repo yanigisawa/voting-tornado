@@ -37,9 +37,10 @@ class ViewEventPage extends React.Component {
                 <dt>Description</dt>
                 <dd>{t.description}</dd>
                 <dt>Members</dt>
-                <dd><ul>
+                <dd>&nbsp;
+                <ul className="list-unstyled">
                 {t.members.map(m =>
-                  <li key={m.user_id}>{m.email} {m.is_team_lead && <b>Leader</b>}</li>
+                  <li key={m.user_id}><img src={m.picture} width="120px"  /> {m.email} {m.is_team_lead && <b>Leader</b>}</li>
                 )}
               </ul></dd>
               </dl>
