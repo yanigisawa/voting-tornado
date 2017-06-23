@@ -102,8 +102,8 @@ class EventVotePage extends React.Component {
 
     this.props.actions.saveVote(vote)
       .then(() => {
-        this.redirect()
         this.ws.send(JSON.stringify(vote));
+        // this.redirect()
       },
         (xr, status, error) => {
         toastr.error("Save Failed: " + xr + " - " + status + " - " + error);
@@ -180,8 +180,7 @@ class EventVotePage extends React.Component {
         )}
         </div>
         <input className="btn btn-primary"
-          disabled={this.state.saving}
-          type="submit" value={this.state.saving ? "Saving..." : "Save"} onClick={this.saveVote} />
+          type="submit" value="Save" onClick={this.saveVote} />
       </div>
     );
   }

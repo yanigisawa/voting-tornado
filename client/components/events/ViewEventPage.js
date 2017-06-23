@@ -39,7 +39,7 @@ class ViewEventPage extends React.Component {
                 <dt>Members</dt>
                 <dd><ul>
                 {t.members.map(m =>
-                  <li key={m._user_id}>{m.email} {m.is_team_lead && <b>Leader</b>}</li>
+                  <li key={m.user_id}>{m.email} {m.is_team_lead && <b>Leader</b>}</li>
                 )}
               </ul></dd>
               </dl>

@@ -9,7 +9,7 @@ export default function eventReducer(state = initialState.events, action) {
     case types.CREATE_EVENT_SUCCESS:
       return [
         ...state,
-        Object.assign({}, action.event)
+        JSON.parse(JSON.stringify(action.event))
       ];
 
     case types.UPDATE_EVENT_SUCCESS:

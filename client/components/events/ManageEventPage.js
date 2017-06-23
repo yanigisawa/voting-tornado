@@ -73,7 +73,10 @@ class ManageEventPage extends React.Component {
     e.preventDefault();
     this.setState({saving: true});
     this.props.actions.saveEvent(this.state.event)
-      .then(() => this.redirect(),
+      .then((response) => {
+        debugger;
+        this.redirect();
+      },
         (xr, status, error) => {
         toastr.error("Save Failed: " + xr + " - " + status + " - " + error);
         this.setState({saving: false});

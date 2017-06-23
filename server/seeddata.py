@@ -15,82 +15,83 @@ def getDate(dateString):
     return datetime.strptime(dateString, '%m/%d/%Y')
 
 _events = [
-    {'id': 1, 'title': 'Event 1', 'startDate' : getDate('5/1/2017'),
-        'endDate' : getDate('5/2/2017'), 'categories' : [
-            {'id': 0, 'name': 'Cat1', 'weight': 5},
-            {'id': 1, 'name': 'Cat2', 'weight': 3},
-            {'id': 2, 'name': 'Cat3', 'weight': 2}
+    {'title': 'Nerdtacular', 'startDate' : getDate('6/29/2017'),
+        'endDate' : getDate('7/1/2017'), 'categories' : [
+            {'id': 0, 'name': 'Likeable Characters', 'weight': 0.8},
+            {'id': 1, 'name': 'Likeable Universe', 'weight': 0.6},
+            {'id': 2, 'name': 'Most Likely', 'weight': 0.4}
             ]},
-    {'id': 2, 'title': 'Event 2', 'startDate' : getDate('6/1/2017'),
-        'endDate' : getDate('6/2/2017'), 'categories' : [
-            {'id': 0, 'name': 'Cat1', 'weight': 5},
-            {'id': 1, 'name': 'Cat2', 'weight': 3},
-            {'id': 2, 'name': 'Cat3', 'weight': 2}
+    { 'title': 'PyOhio', 'startDate' : getDate('7/29/2017'),
+        'endDate' : getDate('7/30/2017'), 'categories' : [
+            {'id': 0, 'name': 'Likeable Characters', 'weight': 0.8},
+            {'id': 1, 'name': 'Likeable Universe', 'weight': 0.6},
+            {'id': 2, 'name': 'Most Likely', 'weight': 0.4}
             ]},
-    {'id': 3, 'title': 'Event 3', 'startDate' : getDate('7/1/2017'),
-        'endDate' : getDate('7/2/2017'), 'categories' : [
-            {'id': 0, 'name': 'Cat1', 'weight': 5},
-            {'id': 1, 'name': 'Cat2', 'weight': 3},
-            {'id': 2, 'name': 'Cat3', 'weight': 2}
+    { 'title': 'Female Founders Conference', 'startDate' : getDate('6/29/2017'),
+        'endDate' : getDate('6/29/2017'), 'categories' : [
+            {'id': 0, 'name': 'Likeable Characters', 'weight': 0.8},
+            {'id': 1, 'name': 'Likeable Universe', 'weight': 0.6},
+            {'id': 2, 'name': 'Most Likely', 'weight': 0.4}
             ]},
-    {'id': 4, 'title': 'Event 4', 'startDate' : getDate('8/1/2017'),
-        'endDate' : getDate('8/2/2017'), 'categories' : [
-            {'id': 0, 'name': 'Cat1', 'weight': 5},
-            {'id': 1, 'name': 'Cat2', 'weight': 3},
-            {'id': 2, 'name': 'Cat3', 'weight': 2}
+    {'title': 'Black Hat', 'startDate' : getDate('7/22/2017'),
+        'endDate' : getDate('7/27/2017'), 'categories' : [
+            {'id': 0, 'name': 'Likeable Characters', 'weight': 0.8},
+            {'id': 1, 'name': 'Likeable Universe', 'weight': 0.6},
+            {'id': 2, 'name': 'Most Likely', 'weight': 0.4}
             ]},
-    {'id': 5, 'title': 'Event 0', 'startDate' : getDate('4/1/2017'),
-        'endDate' : getDate('4/2/2017'), 'categories' : [
-            {'id': 0, 'name': 'Cat1', 'weight': 5},
-            {'id': 1, 'name': 'Cat2', 'weight': 3},
-            {'id': 2, 'name': 'Cat3', 'weight': 2}
-            ]}]
+    { 'title': 'Cron Con', 'startDate' : getDate('1/19/2038'),
+        'endDate' : getDate('12/13/1901'), 'categories' : [
+            {'id': 0, 'name': 'Likeable Characters', 'weight': 0.8},
+            {'id': 1, 'name': 'Likeable Universe', 'weight': 0.6},
+            {'id': 2, 'name': 'Most Likely', 'weight': 0.4}
+            ]}
+    ]
 
 _votes = [
     {'teamId': '123', 'userId': 'a', 'categories': [
-        {'id': 0, 'weight': 5, 'rank': 1},
-        {'id': 1, 'weight': 3, 'rank': 1},
-        {'id': 2, 'weight': 2, 'rank': 1}
+        {'id': 0, 'weight': 0.8, 'rank': 1},
+        {'id': 1, 'weight': 0.6, 'rank': 1},
+        {'id': 2, 'weight': 0.4, 'rank': 1}
     ]},
     {'teamId': '123', 'userId': 'b', 'categories': [
-        {'id': 0, 'weight': 5, 'rank': 2},
-        {'id': 1, 'weight': 3, 'rank': 2},
-        {'id': 2, 'weight': 2, 'rank': 2}
+        {'id': 0, 'weight': 0.8, 'rank': 2},
+        {'id': 1, 'weight': 0.6, 'rank': 2},
+        {'id': 2, 'weight': 0.4, 'rank': 2}
     ]},
     {'teamId': '123', 'userId': 'c', 'categories': [
-        {'id': 0, 'weight': 5, 'rank': 3},
-        {'id': 1, 'weight': 3, 'rank': 3},
-        {'id': 2, 'weight': 2, 'rank': 3}
+        {'id': 0, 'weight': 0.8, 'rank': 3},
+        {'id': 1, 'weight': 0.6, 'rank': 3},
+        {'id': 2, 'weight': 0.4, 'rank': 3}
     ]},
     {'teamId': '456', 'userId': 'a', 'categories': [
-        {'id': 0, 'weight': 5, 'rank': 4},
-        {'id': 1, 'weight': 3, 'rank': 4},
-        {'id': 2, 'weight': 2, 'rank': 4}
+        {'id': 0, 'weight': 0.8, 'rank': 4},
+        {'id': 1, 'weight': 0.6, 'rank': 4},
+        {'id': 2, 'weight': 0.4, 'rank': 4}
     ]},
     {'teamId': '456', 'userId': 'b', 'categories': [
-        {'id': 0, 'weight': 5, 'rank': 5},
-        {'id': 1, 'weight': 3, 'rank': 5},
-        {'id': 2, 'weight': 2, 'rank': 5}
+        {'id': 0, 'weight': 0.8, 'rank': 5},
+        {'id': 1, 'weight': 0.6, 'rank': 5},
+        {'id': 2, 'weight': 0.4, 'rank': 5}
     ]},
     {'teamId': '456', 'userId': 'c', 'categories': [
-        {'id': 0, 'weight': 5, 'rank': 1},
-        {'id': 1, 'weight': 3, 'rank': 1},
-        {'id': 2, 'weight': 2, 'rank': 1}
+        {'id': 0, 'weight': 0.8, 'rank': 1},
+        {'id': 1, 'weight': 0.6, 'rank': 1},
+        {'id': 2, 'weight': 0.4, 'rank': 1}
     ]},
     {'teamId': '789', 'userId': 'a', 'categories': [
-        {'id': 0, 'weight': 5, 'rank': 2},
-        {'id': 1, 'weight': 3, 'rank': 2},
-        {'id': 2, 'weight': 2, 'rank': 2}
+        {'id': 0, 'weight': 0.8, 'rank': 2},
+        {'id': 1, 'weight': 0.6, 'rank': 2},
+        {'id': 2, 'weight': 0.4, 'rank': 2}
     ]},
     {'teamId': '789', 'userId': 'b', 'categories': [
-        {'id': 0, 'weight': 5, 'rank': 3},
-        {'id': 1, 'weight': 3, 'rank': 3},
-        {'id': 2, 'weight': 2, 'rank': 3}
+        {'id': 0, 'weight': 0.8, 'rank': 3},
+        {'id': 1, 'weight': 0.6, 'rank': 3},
+        {'id': 2, 'weight': 0.4, 'rank': 3}
     ]},
     {'teamId': '789', 'userId': 'c', 'categories': [
-        {'id': 0, 'weight': 5, 'rank': 4},
-        {'id': 1, 'weight': 3, 'rank': 4},
-        {'id': 2, 'weight': 2, 'rank': 4}
+        {'id': 0, 'weight': 0.8, 'rank': 4},
+        {'id': 1, 'weight': 0.6, 'rank': 4},
+        {'id': 2, 'weight': 0.4, 'rank': 4}
     ]}
 ]
 
