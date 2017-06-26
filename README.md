@@ -10,3 +10,6 @@
 3. mkvirtualenv `voting-tornado` (assumes you're using virtualenv wrapper)
 4. `python server/seeddata.py` to initialize some seed data for development testing
 5. `npm start -s`
+
+# Slides #
+This repository was part of a Pythology Web Framework shootout on June 23rd, 2017. The slides used during the talk are available on [slides.com](http://slides.com/yanigisawa/voting-tornado#/).
